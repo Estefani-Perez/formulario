@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Alta de Vehículos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            padding: 10px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #conteo {
+            width: 100px;
+            margin-left: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-align: center;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Formulario de Alta de Vehículos</h1>
+        <form id="formulario">
+            <label for="vehiculo">Vehículo:</label>
+            <input type="text" id="vehiculo" required><br>
+
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" required><br>
+
+            <label for="modelo">Modelo:</label>
+            <input type="text" id="modelo" required><br>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <div>
+            <label for="conteo">Número de Vehículos:</label>
+            <input type="text" id="conteo" readonly>
+        </div>
+
+        <table id="tabla">
+            <thead>
+                <tr>
+                    <th>Vehículo</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Obtener referencias a los elementos del formulario y la tabla
+        const formulario = document.getElementById('formulario');
+        const vehiculoInput = document.getElementById('vehiculo');
+        const marcaInput = document.getElementById('marca');
+        const modeloInput = document.getElementById('modelo');
+        const conteoInput = document.getElementById('conteo');
+        const tbody = document.getElementById('tbody');
+
+        // Array para almacenar los vehículos
+        let vehiculos = [];
+
+        // Función para guardar los datos del formulario
+        function guardarDatos(event) {
+            event.preventDefault();
+
+            // Obtener los valores del formulario
+            const vehiculo = vehiculoInput.value;
+            const marca = marcaInput.value;
+            const modelo = modeloInput.value;
+
+            // Agregar los datos a la lista de vehículos
+            vehiculos.push({
+                vehiculo: vehiculo,
+                marca: marca,
+                modelo: modelo
+            });
+
+            // Limpiar los campos del formulario
+            vehiculoInput.value = '';
+            marcaInput.value = '';
+            modeloInput.value = '';
+
+            // Actualizar la tabla y el conteo
+            actualizarTabla();
+            actualizarConteo();
+        }
+
+        // Función para actualizar la tabla con los datos de los vehículos
+        function actualizarTabla() {
+            // Limpiar el contenido actual de la tabla
+            tbody.innerHTML = '';
+
+            // Recorrer la lista de vehículos y crear filas en la tabla
+            vehiculos.forEach((vehiculo) => {
+                const row = document.createElement('tr');
+                const vehiculoCell = document.createElement('td');
+                const marcaCell = document.createElement('td');
+                const modeloCell = document.createElement('td');
+
+                vehiculoCell.textContent = vehiculo.vehiculo;
+                marcaCell.textContent = vehiculo.marca;
+                modeloCell.textContent = vehiculo.modelo;
+
+                row.appendChild(vehiculoCell);
+                row.appendChild(marcaCell);
+                row.appendChild(modeloCell);
+
+                tbody.appendChild(row);
+            });
+        }
+
+        // Función para actualizar el conteo de vehículos
+        function actualizarConteo() {
+            conteoInput.value = vehiculos.length;
+        }
+
+        // Cargar datos JSON existentes (opcional)
+        function cargarDatos() {
+            const datosJson = '[{,"marca":"Marca 2","modelo":"Modelo 2"}]';
+            vehiculos = JSON.parse(datosJson);
+            actualizarTabla();
+            actualizarConteo();
+        }
+
+        // Agregar el evento submit al formulario
+        formulario.addEventListener('submit', guardarDatos);
+
+        // Cargar datos JSON existentes al cargar la página (opcional)
+        cargarDatos();
+    </script>
+</body>
+</html>
